@@ -1,17 +1,29 @@
-# Two Sum
+---
+dayNumber: 1
+title: Two Sum
+platform: LeetCode
+link: https://leetcode.com/problems/two-sum/
+difficulty: Easy
+date: 2025-10-23
+commitHash: [TO BE FILLED BY GITHUB ACTION]
+---
 
-**Title**: Two Sum
-**Platform**: LeetCode
-**Link**: https://leetcode.com/problems/two-sum/
-**Brute Force**: O(n²)
-**Optimized**: O(n)
-**Space**: O(n)
-**Date**: 2025-01-15
+# 💡 Problem Statement
 
-## Problem Statement
+Given an array of integers `nums` and an integer `target`, return indices of the two numbers such that they add up to `target`.
 
-Given an array of integers and a target, return indices of two numbers that add up to target.
+---
 
-## Approach
+## 🛠️ Brute Force Approach (O(n²))
 
-Use hash table to store complements.
+**Time Complexity:** O($n^2$)
+**Space Complexity:** O(1)
+
+The brute force approach uses a nested loop to check every possible pair of numbers.
+
+## ⚡ Optimized Approach (O(n))
+
+**Time Complexity:** O(n)
+**Space Complexity:** O(n)
+
+The optimized approach uses a **Hash Map (or Dictionary)** to store the numbers we've seen and their indices. For each number $x$ in `nums`, we check if `target - x` is already in the map. If it is, we've found the pair. If not, we add $x$ and its index to the map.
