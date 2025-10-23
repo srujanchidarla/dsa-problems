@@ -4,6 +4,11 @@ title: Two Sum
 platform: LeetCode
 link: https://leetcode.com/problems/two-sum/
 difficulty: Easy
+pattern: Hash Table
+approach: Use hash map to store complements for O(n) lookup
+optimized: O(n)
+bruteforce: O(n²)
+space: O(n)
 date: 2025-10-23
 commitHash: [INJECTED BY GITHUB ACTION]
 ---
