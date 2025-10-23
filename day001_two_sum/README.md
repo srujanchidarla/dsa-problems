@@ -5,25 +5,47 @@ platform: LeetCode
 link: https://leetcode.com/problems/two-sum/
 difficulty: Easy
 date: 2025-10-23
-commitHash: [TO BE FILLED BY GITHUB ACTION]
+commitHash: [INJECTED BY GITHUB ACTION]
 ---
 
 # 💡 Problem Statement
 
 Given an array of integers `nums` and an integer `target`, return indices of the two numbers such that they add up to `target`.
 
+You may assume that each input would have exactly one solution, and you may not use the same element twice. You can return the answer in any order.
+
+---
+
+## 🔑 Key Pattern & Recognition
+
+This problem is the canonical example of the **"Hash Map Complement"** pattern.
+
+| Pattern Name            | Goal                                                                                                                                                          | How to Recognize                                                                                                                  |
+| :---------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------ | :-------------------------------------------------------------------------------------------------------------------------------- |
+| **Hash Map Complement** | Find two elements in an array/list that satisfy a specific condition (e.g., sum up to a target, difference equals K).                                         | The input is an unsorted array, and you need to find a **pair** whose relationship (sum, difference, etc.) equals a target value. |
+| **The Trick**           | Convert the two-sum problem into a one-sum check. For every element $x$, instantly check if the required **complement** ($target - x$) has already been seen. |
+
+This pattern allows you to solve two-pointer or two-value problems in **O(n) time** by sacrificing **O(n) space** for the hash map, which stores previously encountered values for $O(1)$ lookup.
+
 ---
 
 ## 🛠️ Brute Force Approach (O(n²))
 
+**Approach:** Use nested loops. The outer loop selects the first number, and the inner loop checks every other number against it to find the pair that sums to the `target`.
+
 **Time Complexity:** O($n^2$)
 **Space Complexity:** O(1)
 
-The brute force approach uses a nested loop to check every possible pair of numbers.
+---
 
 ## ⚡ Optimized Approach (O(n))
 
-**Time Complexity:** O(n)
-**Space Complexity:** O(n)
+**Approach:** We use the **Hash Map Complement** pattern. We iterate through the array only once, using a Hash Map (Dictionary) to track values we've already processed and their indices.
 
-The optimized approach uses a **Hash Map (or Dictionary)** to store the numbers we've seen and their indices. For each number $x$ in `nums`, we check if `target - x` is already in the map. If it is, we've found the pair. If not, we add $x$ and its index to the map.
+1.  **Iterate** through the array using index $i$ and value $x$.
+2.  Calculate the **complement** needed: $C = target - x$.
+3.  Check if $C$ is already a **key** in the Hash Map. If yes, we found our pair: return $\text{map}[C]$ and $i$.
+4.  If not found, **add** the current number and its index to the map: $\text{map}[x] = i$.
+
+**Time Complexity:** O(n) (Single pass with O(1) average lookup/insertion)
+**Space Complexity:** O(n) (To store the Hash Map)
