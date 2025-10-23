@@ -8,7 +8,7 @@ date: 2025-10-23
 commitHash: [INJECTED BY GITHUB ACTION]
 ---
 
-# 💡 Problem Statement
+# 💡Problem Statement
 
 Given an array of integers `nums` and an integer `target`, return indices of the two numbers such that they add up to `target`.
 
