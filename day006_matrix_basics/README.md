@@ -1,76 +1,50 @@
----
-dayNumber: 6
-title: Matrix Row and Column Sums
-platform: Smart Interviews
-link: https://hive.smartinterviews.in/contests/smart-interviews-basic/problems/matrix-row-sum (and Column Sum)
-difficulty: Easy
-pattern: Streaming Input / 1D Array Simulation
-approach: Calculate Row Sums by streaming and Column Sums using an auxiliary 1D array.
-optimized: O(N*M)
-bruteforce: O(N*M)
-space: O(M)
-date: 2025-10-23
-commitHash: [INJECTED BY GITHUB ACTION]
-tags:
-  - matrix
-  - array
-  - streaming
----
+# Day 6: Matrix Basics 🗺️
 
-# Matrix Row and Column Sums
-
-**Platform:** Smart Interviews | **Difficulty:** Easy | **Pattern:** Streaming/Matrix Traversal
+**Category:** Arrays & Matrix Traversal
+**Date:** 2025-10-23
+**Pattern:** **1D Array Simulation** and **Boundary/Index Traversal**
 
 ---
 
-## Problem Description (Combined)
+## 🎯 Primary Problem (Required)
 
-Given a matrix of size $N \times M$, the task is to perform two separate calculations:
+### Matrix Row and Column Sums
 
-1.  **Row Sum:** Print the sum of elements for each row. **Constraint:** Solve this without declaring or storing the full $N \times M$ matrix.
-2.  **Column Sum:** Print the sum of elements for each column.
-
----
-
-## Approaches
-
-### 1. Matrix Row Sum (Streaming Approach) - O(N\*M), O(1) Extra Space
-
-**Idea:** To meet the "without storing the matrix" constraint, we must calculate the row sum as we receive the input for that row.
-
-1.  Read $N$ and $M$.
-2.  Loop $N$ times (once per row).
-3.  Inside the loop, initialize `row_sum = 0`.
-4.  Loop $M$ times (once per column), reading each element and adding it to `row_sum`.
-5.  After the inner loop finishes, print `row_sum`.
-
-### 2. Matrix Column Sum (1D Array Simulation) - O(N\*M), O(M) Extra Space ⭐
-
-**Idea:** To calculate column sums without storing the whole matrix, we need to store **only the column sums**.
-
-1.  Read $N$ and $M$.
-2.  Initialize an array (or vector) called `col_sums` of size $M$ to all zeros. **This is $O(M)$ space.**
-3.  Loop $N$ times (rows).
-4.  Inside the loop, loop $M$ times (columns).
-5.  Read the current element $ar[i][j]$.
-6.  Add this element to the corresponding column sum: `col_sums[j] += ar[i][j]`.
-7.  After reading all $N \times M$ elements, print the elements of the `col_sums` array.
+- **Platform:** Smart Interviews
+- **Difficulty:** Easy
+- **Optimal Time:** O(N\*M)
+- **Concept:** Streaming I/O (Row Sum) vs. 1D Array Storage (Column Sum)
+- **Location:** [primary_matrix_sums/](./primary_matrix_sums/)
+- **Completion:** ✅
 
 ---
 
-## Complexity Analysis
+## 💡 Related Problems (Optional Practice)
 
-| Calculation           | Time    | Space | Notes                                                            |
-| :-------------------- | :------ | :---- | :--------------------------------------------------------------- |
-| Row Sum (Streaming)   | O(N\*M) | O(1)  | Reading all $N \times M$ elements once, constant extra space.    |
-| Column Sum (1D Array) | O(N\*M) | O(M)  | Reading all $N \times M$ elements once, storing $M$ column sums. |
+### 1. Diagonal Sums
+
+- **Platform:** LeetCode
+- **Difficulty:** Easy
+- **Optimal Time:** O(N²)
+- **Concept:** Index arithmetic ($i=j$ and $i+j = N-1$)
+- **Location:** [related_diagonal_sums/](./related_diagonal_sums/)
+- **Completion:** ⬜ (To be completed)
+
+### 2. Spiral Matrix
+
+- **Platform:** LeetCode
+- **Difficulty:** Medium
+- **Optimal Time:** O(N\*M)
+- **Concept:** Boundary manipulation and state change (core matrix traversal logic)
+- **Location:** [related_spiral_matrix/](./related_spiral_matrix/)
+- **Completion:** ⬜ (To be completed)
 
 ---
 
-## Solutions
+## 🧠 Pattern Notes
 
-The provided solutions will demonstrate both calculations using a single pass over the input stream.
+### Matrix Traversal Core Principles
 
-- 🐍 [solution.py](./solution.py)
-- ☕ [solution.java](./solution.java)
-- ⚡ [solution.cpp](./solution.cpp)
+1.  **Index Systems**: Master the relationship between $(i, j)$ coordinates and traversal patterns (e.g., $i$ changes for row sums, $j$ changes for column sums).
+2.  **Boundary Management**: For complex problems like Spiral Traversal, tracking boundaries (left, right, top, bottom pointers) is crucial.
+3.  **Space Tradeoffs**: When an entire matrix must be processed before an output can be finalized (e.g., Column Sums), storing intermediate results in a 1D array is often the optimal space-time tradeoff.
