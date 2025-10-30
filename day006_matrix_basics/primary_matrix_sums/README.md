@@ -34,11 +34,11 @@ Given a matrix of size $N \times M$, the task is to perform two separate calcula
 
 ## Approaches
 
-### 1. Matrix Row Sum (Streaming Approach) - O(N\*M), O(1) Extra Space ⭐
+### 1.Matrix Row Sum (Streaming Approach) - O(N\*M), O(1) Extra Space ⭐
 
 **Idea:** To meet the "without storing the matrix" constraint, we must calculate the row sum as we receive the input for that row. We read $M$ elements, calculate their sum, print it, and discard the row before reading the next. This approach showcases efficient memory management.
 
-### 2. Matrix Column Sum (1D Array Simulation) - O(N\*M), O(M) Extra Space
+### 2.Matrix Column Sum (1D Array Simulation) - O(N\*M), O(M) Extra Space
 
 **Idea:** Since column sums require data from _all_ rows to be complete, we must store the intermediate totals. We initialize a 1D array of size $M$ (`col_sums`). As we read each element $ar[i][j]$, we add it to `col_sums[j]`. This uses $O(M)$ extra space, but still allows for a single, efficient $O(N \cdot M)$ pass over the input.
 
