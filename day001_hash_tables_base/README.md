@@ -20,7 +20,7 @@
 
 ## 💡 Related Problems (Optional Practice)
 
-### 1. Duplicate Integer (Contains Duplicate)
+### 1. Contains Duplicate (NeetCode: Duplicate Integer)
 
 - **Platform:** **NeetCode 150** 🚀
 - **Difficulty:** Easy

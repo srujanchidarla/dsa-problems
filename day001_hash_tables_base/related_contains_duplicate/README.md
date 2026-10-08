@@ -1,8 +1,8 @@
 ---
 dayNumber: 1
-title: Duplicate Integer
+title: Contains Duplicate
 platform: NeetCode 150
-link: https://neetcode.io/problems/duplicate-integer
+link: https://leetcode.com/problems/contains-duplicate/
 difficulty: Easy
 pattern: Hash Table / Set
 approach: Use a HashSet/Unordered Set to track seen numbers.
@@ -16,7 +16,7 @@ tags:
   - hash-table
 ---
 
-# Duplicate Integer(Contains Duplicate)
+# Contains Duplicate (NeetCode: Duplicate Integer)
 
 **Platform:** NeetCode 150 | **Difficulty:** Easy | **Pattern:** Hash Table
 
@@ -43,9 +43,9 @@ Here is the updated related_contains_duplicate/README.md.
 ## Markdown
 
 dayNumber: 1
-title: Duplicate Integer
+title: Contains Duplicate
 platform: NeetCode 150
-link: https://neetcode.io/problems/duplicate-integer
+link: https://leetcode.com/problems/contains-duplicate/
 difficulty: Easy
 pattern: Hash Table / Set
 approach: Use a HashSet/Unordered Set to track seen numbers.
@@ -61,7 +61,7 @@ tags:
 
 ---
 
-# Duplicate Integer (Contains Duplicate)
+# Contains Duplicate (NeetCode: Duplicate Integer)
 
 **Platform:** NeetCode 150 | **Difficulty:** Easy | **Pattern:** Hash Table
 
