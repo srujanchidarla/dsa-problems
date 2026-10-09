@@ -1,0 +1,1 @@
+{"problem":"Two Sum","steps":[{"markers":[],"note":"target = 9. One pass — remember each value's index.","values":[2,7,11,15]},{"markers":[{"index":0,"label":"i"}],"note":"x=2 → need 7. Not seen — store 2→0.","values":[2,7,11,15]},{"markers":[{"index":1,"label":"i"}],"note":"x=7 → need 2. Seen at index 0 — return [0,1].","values":[2,7,11,15]}],"type":"array"}
