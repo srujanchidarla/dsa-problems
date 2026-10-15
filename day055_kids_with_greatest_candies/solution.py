@@ -2,6 +2,24 @@ import sys
 input = sys.stdin.readline
 
 # ─────────────────────────────────────────────────────────────────────────
+# BRUTE FORCE — O(n²) time | O(1) auxiliary space
+# For each kid, compare against every other kid
+# ─────────────────────────────────────────────────────────────────────────
+
+
+def kids_with_candies_brute_force(candies, extra_candies):
+    result = []
+    for c in candies:
+        ok = True
+        for other in candies:
+            if c + extra_candies < other:  # someone still has more → not greatest
+                ok = False
+                break
+        result.append(ok)
+    return result
+
+
+# ─────────────────────────────────────────────────────────────────────────
 # OPTIMIZED — O(n) time | O(1) auxiliary space
 # Find the max once, then one comparison per kid
 # ─────────────────────────────────────────────────────────────────────────
