@@ -69,4 +69,104 @@ words.sort(key=lambda w: (-len(w), w))  # longest first, then alphabetical
 
 ---
 
-*Next: OOP (classes, dunder methods), generators/iterators, decorators.*
+## Phase 2 — Decorators & Generators
+
+### 1. Functions are objects
+
+Everything in this phase follows from one fact: in Python, functions are first-class values — assignable, passable, returnable.
+
+```python
+def greet(): return "hi"
+f = greet          # no call — f IS the function
+f()                # "hi"
+```
+
+A **decorator** is just a function that takes a function and returns a better one.
+
+### 2. Decorators
+
+```python
+import functools, time
+
+def timer(fn):
+    @functools.wraps(fn)          # keep the original name/docstring
+    def wrapper(*args, **kwargs):
+        start = time.perf_counter()
+        result = fn(*args, **kwargs)
+        print(f"{fn.__name__}: {time.perf_counter() - start:.3f}s")
+        return result
+    return wrapper
+
+@timer                            # job = timer(job)
+def job(): ...
+```
+
+Anatomy to recite: the outer function takes `fn`; `wrapper` accepts `*args, **kwargs` so it fits any signature; the wrapper calls `fn`, adds behavior before/after, and returns the result; `@functools.wraps` stops the decorated function from losing its identity.
+
+**Decorator with arguments** = one more nesting level — a function that returns a decorator:
+
+```python
+def retry(times=3):
+    def deco(fn):
+        @functools.wraps(fn)
+        def wrapper(*args, **kwargs):
+            for attempt in range(times):
+                try:
+                    return fn(*args, **kwargs)
+                except Exception:
+                    if attempt == times - 1: raise
+        return wrapper
+    return deco
+
+@retry(times=5)
+def flaky_call(): ...
+```
+
+Real uses worth naming: logging, timing, retry, caching (`@functools.lru_cache` *is* a decorator — memoization for free), auth checks in web frameworks (`@login_required`).
+
+### 3. Generators and yield
+
+A function with `yield` doesn't run when called — it returns a **generator** that produces values one at a time, pausing between them.
+
+```python
+def countdown(n):
+    while n > 0:
+        yield n
+        n -= 1
+
+for x in countdown(3): ...   # 3, 2, 1 — computed on demand
+```
+
+Why interviewers care: **memory**. A generator streams values in O(1) memory; the equivalent list for `range(10**9)` costs gigabytes. Any "process a huge file" question is a generator question: read and yield line by line, never load it all.
+
+- **Generator expression**: `(x*x for x in data)` — a comprehension in parentheses; lazy and single-use.
+- **`yield from`**: delegate to another generator (`yield from inner()`).
+- Generators are **single-pass**: once consumed, they're empty. Converting to a list "to use it twice" throws away the whole point.
+
+### 4. The iterator protocol (what's under the hood)
+
+`for` works on anything with `__iter__` + `__next__`, raising `StopIteration` at the end. Generators implement it automatically — that's all a generator is: an iterator you write with a function instead of a class. `iter()` / `next()` let you drive one manually, which is also how you inspect one in a debugger.
+
+### 5. Context managers — the generator tie-in
+
+`with` guarantees cleanup (files, locks, connections). The fastest way to write one is a generator + decorator:
+
+```python
+from contextlib import contextmanager
+
+@contextmanager
+def open_session():
+    session = connect()
+    try:
+        yield session          # everything before yield = setup
+    finally:
+        session.close()        # everything in finally = guaranteed cleanup
+```
+
+Setup → yield → teardown is the same pause-and-resume machinery as §3, pointed at resource management.
+
+Interview one-liner: "Decorators wrap *behavior around functions*; generators wrap *production of values over time*."
+
+---
+
+*Next: OOP — classes, dunder methods, dataclasses; then concurrency basics (threads vs processes, the GIL).*

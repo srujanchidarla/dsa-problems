@@ -81,4 +81,74 @@ Keys must be **stable and unique** (ids, not array indexes) — React uses them 
 
 ---
 
-*Next: useRef/useMemo/useCallback, context, and performance (memo, why re-renders happen).*
+## Phase 2 — Hooks Deep-Dive
+
+### 1. Rules of hooks (non-negotiable)
+
+1. **Only at the top level** — never inside loops, conditions, or nested functions. React tracks hooks by call order; a conditional hook shifts the order and corrupts state.
+2. **Only in React functions** — components and custom hooks, never plain JS functions.
+
+### 2. useRef — the value that doesn't re-render
+
+```jsx
+const inputRef = useRef(null);
+<input ref={inputRef} />
+<button onClick={() => inputRef.current.focus()}>Focus</button>
+```
+
+Two jobs:
+- **DOM access**: focus, scroll, measure — the escape hatch for things React doesn't model.
+- **Mutable scratch space**: `ref.current` holds a value across renders *without* triggering one (timers, previous values, latest callback). If changing it shouldn't repaint the UI, it's a ref, not state.
+
+Rule of thumb: state is for data the UI *shows*; refs are for data the component *remembers silently*.
+
+### 3. useMemo & useCallback — referential stability
+
+React re-renders re-run the whole component function. Two tools to skip work:
+
+- **useMemo(fn, deps)** — cache a *computed value* (expensive sort/filter) until deps change.
+- **useCallback(fn, deps)** — cache a *function identity* so it doesn't look "new" every render.
+
+They matter for exactly one reason: **identity**. A child wrapped in `React.memo` re-renders if it receives a new object/function reference — even if the contents are identical. `useCallback` + `memo` together stop that cascade.
+
+When *not* to use them: everywhere. Memoizing a cheap computation costs more (comparison + memory) than redoing it. Reach for them when a profiler shows a real problem, or when passing callbacks/objects to memoized children.
+
+### 4. useContext — the prop-drilling exit
+
+```jsx
+const ThemeContext = createContext("light");
+function App() { return <ThemeContext.Provider value="dark"><Page /></ThemeContext.Provider>; }
+function Page() { const theme = useContext(ThemeContext); /* no props needed */ }
+```
+
+Context is a tunnel through the tree: provide at the top, consume anywhere below. Built for slow-changing, app-wide data — theme, auth user, locale.
+
+Caveat interviewers probe: when the context value changes, **every consumer re-renders**. Fine for a theme; a footgun for rapidly changing state. For that, pair context with a state library or split contexts by update frequency.
+
+### 5. Custom hooks — logic with a name
+
+Any function named `useX` that calls other hooks. It shares *logic*, not state — each caller gets its own copy.
+
+```jsx
+function useFetch(url) {
+  const [data, setData] = useState(null);
+  useEffect(() => {
+    let live = true;
+    fetch(url).then(r => r.json()).then(d => { if (live) setData(d); });
+    return () => { live = false; };  // ignore stale responses after unmount/re-run
+  }, [url]);
+  return data;
+}
+```
+
+If the same useState+useEffect dance appears twice, extract it. This is the most common "design" question in React interviews: show the messy component, then the custom-hook refactor.
+
+### 6. Why re-renders happen (the model to recite)
+
+- A component re-renders when **its own state changes**, its **parent re-renders** (children re-render by default, props or not), or a **context it consumes changes**.
+- Re-render ≠ DOM update: React re-runs the function, diffs the output, and touches the DOM only where the diff says so. Re-renders are cheap-ish; reconciliation exists to avoid wasted DOM writes.
+- `React.memo` opts a component out of the parent cascade — if props are shallowly equal, skip. Useless unless props are referentially stable, which is what useMemo/useCallback are *for*.
+
+---
+
+*Next: rendering & performance in depth (code splitting, lazy, Suspense), then design patterns (controlled vs uncontrolled, compound components).*
