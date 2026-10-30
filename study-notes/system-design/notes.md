@@ -155,4 +155,96 @@ Closing line for the interview: "Reads are the product, so everything — cache,
 
 ---
 
-*Next: Phase 3 — LLD/OOD patterns (class design, SOLID in practice, design a parking lot / elevator).*
+## Phase 3 — LLD / OOD: Designing Classes That Survive the Interview
+
+HLD (Phase 2) asks "what boxes and arrows?". LLD asks "what *classes* live inside one box, and how do they talk?". The interviewer is grading three things: can you turn nouns into classes, can you name the relationships, and can you defend a trade-off without over-engineering.
+
+### 1. The LLD process (say it out loud)
+
+1. **Requirements** — functional first ("park a car, pay on exit"), then the edge cases ("full lot? lost ticket?").
+2. **Nouns → classes, verbs → methods.** Underline the nouns in the prompt: parking lot, floor, spot, vehicle, ticket, payment. Those are your first classes.
+3. **Relationships** — a lot *has many* floors, a floor *has many* spots, a spot *holds at most one* vehicle. Say "has-a" vs "is-a" out loud: a car *is a* vehicle (inheritance), a lot *has* spots (composition).
+4. **Design the core flow end-to-end** — one happy path, fully worked, before any edge case.
+5. **Edge cases + extensibility last** — only after the happy path is solid.
+
+The most common failure is starting to code classes before step 1. The second most common is designing for requirements nobody asked for.
+
+### 2. SOLID, in practice (not as a list to recite)
+
+| Principle | One-line version | What it looks like when broken |
+| --- | --- | --- |
+| **S** — Single Responsibility | One class, one reason to change | A `ParkingLot` that also computes prices, sends emails, and talks to the payment gateway |
+| **O** — Open/Closed | Extend by adding, not by editing | Every new vehicle type means editing a `switch` in the core class |
+| **L** — Liskov Substitution | A subclass must work wherever its parent works | A `MotorcycleSpot` that throws when a car parks — then it isn't really a spot |
+| **I** — Interface Segregation | Small interfaces, not one fat one | A `Vehicle` interface forcing a bicycle to implement `refuel()` |
+| **D** — Dependency Inversion | Depend on abstractions, not concrete classes | `TicketService` creating its own `StripeGateway` instead of receiving a `PaymentGateway` |
+
+Interview move: don't recite all five. Pick the one your design actually uses — usually S and O — and point at the exact class where it shows up. "Pricing is its own class, so adding hourly-vs-flat pricing never touches parking logic" beats a textbook definition.
+
+### 3. Worked example: design a parking lot
+
+Requirements: multiple floors, spot types (compact / large / handicapped), park a vehicle, issue a ticket, pay on exit, show free spots per floor.
+
+```mermaid
+classDiagram
+    class ParkingLot {
+        +List~Floor~ floors
+        +park(vehicle) Ticket
+        +unpark(ticket) Payment
+    }
+    class Floor {
+        +int level
+        +List~Spot~ spots
+        +freeSpots(type) int
+    }
+    class Spot {
+        +SpotType type
+        +Vehicle vehicle
+        +isFree() bool
+    }
+    class Vehicle {
+        +String plate
+        +VehicleType type
+    }
+    class Ticket {
+        +DateTime entryTime
+        +Spot spot
+    }
+    class Pricing {
+        +price(ticket) Money
+    }
+    ParkingLot "1" --> "*" Floor
+    Floor "1" --> "*" Spot
+    Spot "0..1" --> "0..1" Vehicle
+    ParkingLot --> Ticket
+    ParkingLot --> Pricing
+```
+
+Design decisions worth saying out loud:
+- **Spot assignment**: first free spot of a fitting type, scanning floors bottom-up — simple, explainable, and good enough. A fancier "nearest to entrance" rule is an optimization, not a requirement.
+- **Pricing is a separate class** (Single Responsibility): hourly rate, first-hour-free, daily cap — all change without touching `park()` / `unpark()`.
+- **Ticket is the state**: entry time + spot. Payment is computed from the ticket, never stored on the vehicle.
+- **Concurrency, one line**: two cars can't take the same spot — the `park()` check-and-assign must be atomic (a lock per floor is the honest answer; a global lock works, a per-spot lock is the follow-up).
+
+### 4. Worked example: design an elevator (the follow-up they actually ask)
+
+Same process, smaller surface. Requirements: one building, N elevators, external calls (up/down buttons on a floor) and internal calls (floor buttons inside).
+
+- **Classes**: `Elevator` (current floor, direction, door state), `Request` (from floor, to floor, up/down), `ElevatorController` (assigns requests to elevators), `Building` (floors + elevators).
+- **The interesting decision is dispatch**: nearest elevator? The one already moving in that direction? State the rule, then its failure mode: nearest-car can starve a far floor, so add aging — a request waiting too long gets priority.
+- **State machine, not if-chains**: an elevator is `IDLE → MOVING → DOORS_OPEN → IDLE`. Saying "state machine" signals you have built one before; a nest of booleans signals the opposite.
+- **What not to build**: the motor, the cable physics, a real-time scheduler. LLD is about the *software* objects, not the hardware.
+
+### 5. LLD pitfalls (where marks are lost)
+
+- **Over-engineering**: a Factory for every class, an Observer for a two-class design. Every pattern must earn its place by solving a stated requirement.
+- **God classes**: if one class has `park`, `price`, `notify`, and `report` methods, split it — that's the S in SOLID, applied live.
+- **No data model**: classes with no fields are just namespaces. Every class should own state it is responsible for.
+- **Forgetting the flow**: a beautiful class diagram with no worked `park()` → `pay()` walkthrough is unfinished. Always end with the happy path, step by step.
+
+Closing line for the interview: "Start from the requirements, let the nouns become classes, keep each class to one job, and walk the happy path before touching an edge case."
+
+---
+
+*Next: Phase 4 — Distributed systems in depth (replication, sharding, consistency models, consensus at a glance).*
+

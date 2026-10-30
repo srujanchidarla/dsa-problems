@@ -151,4 +151,97 @@ If the same useState+useEffect dance appears twice, extract it. This is the most
 
 ---
 
-*Next: rendering & performance in depth (code splitting, lazy, Suspense), then design patterns (controlled vs uncontrolled, compound components).*
+## Phase 3 — Rendering & Performance, Then Design Patterns
+
+Phase 2 answered *why* re-renders happen. This phase answers *what to do about it* — and how to structure components so performance problems don't appear in the first place.
+
+### 1. The render pipeline (recite this in 30 seconds)
+
+1. **Render**: React calls your component functions and builds a new virtual-DOM tree. Cheap-ish, but not free.
+2. **Reconcile (diff)**: the new tree is compared with the old one, node by node. Same type + same key → update in place; different type → tear down and rebuild.
+3. **Commit**: only the diff touches the real DOM.
+
+Two consequences interviewers love: re-render ≠ DOM update (Phase 2), and **keys decide identity** — a wrong key makes React destroy and rebuild a component that should have been updated, losing its state.
+
+### 2. Code splitting — don't ship the whole app on first load
+
+Most of the bundle is code the user hasn't asked for yet (settings pages, admin panels, heavy charts). Split it out and load it on demand:
+
+```jsx
+import { lazy, Suspense } from "react";
+
+const Settings = lazy(() => import("./Settings")); // separate chunk
+
+function App() {
+  return (
+    <Suspense fallback={<p>Loading settings…</p>}>
+      <Settings />
+    </Suspense>
+  );
+}
+```
+
+- `React.lazy` turns an `import()` into a component that loads when first rendered.
+- `Suspense` is the loading boundary: whatever you put in `fallback` shows while the chunk downloads. Without it, lazy throws.
+- Split by **route** first (each page is a natural boundary), then by heavy feature. Splitting every component is noise.
+
+### 3. Suspense for data (the mental model, not the library)
+
+Suspense is a general "wait for something" boundary: a component can *suspend* while data loads, and the nearest `Suspense` shows its fallback. In interviews, the point to make is the **declarative shift** — instead of `if (loading) return <Spinner />` in every component, the loading state lives at the boundary, and the component reads data as if it were already there.
+
+Caveats to name: a suspended component unmounts its subtree while loading (state inside is lost unless lifted), and waterfalls happen when nested Suspense boundaries load one after another — fetch in parallel at the parent when you can.
+
+### 4. Performance: measure first, memoize second
+
+The order matters — memoization without measurement is the most common React performance mistake:
+
+1. **Profile** (React DevTools Profiler): which components re-render, how often, how long? Fix the top offender, not the one you suspect.
+2. **Fix the structure**: lift state down (state used by one leaf shouldn't live at the root and re-render the whole tree), split components so a fast-changing part is its own subtree.
+3. **Then memoize**: `React.memo` for components, `useMemo` for expensive values, `useCallback` for function identity — exactly the Phase 2 tools, applied where the profiler pointed.
+
+Also worth naming: **virtualization** for long lists (render only the visible rows — `react-window` and friends), and **debouncing** inputs that trigger expensive work on every keystroke.
+
+### 5. Controlled vs uncontrolled components
+
+| | Controlled | Uncontrolled |
+|---|---|---|
+| Value lives in | React state (`value` + `onChange`) | The DOM itself (`ref` / `defaultValue`) |
+| Best for | Validation, instant feedback, submit logic | Simple forms, file inputs, one-off reads |
+| Cost | Re-render on every keystroke | React can't see the value until you ask |
+
+```jsx
+// Controlled: React owns the value
+const [name, setName] = useState("");
+<input value={name} onChange={e => setName(e.target.value)} />
+
+// Uncontrolled: the DOM owns it, React reads it once
+const inputRef = useRef(null);
+<input ref={inputRef} defaultValue="Srujan" />
+```
+
+Interview answer: "Controlled by default for anything I validate or submit; uncontrolled when I just need the value once." A file `<input type="file">` is always uncontrolled — React can't set its value.
+
+### 6. Compound components — the pattern behind every good UI library
+
+Instead of one component with twenty props, expose a family that shares state implicitly:
+
+```jsx
+<Tabs defaultTab="profile">
+  <Tabs.List>
+    <Tabs.Tab id="profile">Profile</Tabs.Tab>
+    <Tabs.Tab id="settings">Settings</Tabs.Tab>
+  </Tabs.List>
+  <Tabs.Panel id="profile">…</Tabs.Panel>
+</Tabs>
+```
+
+The parent (`Tabs`) holds the active-tab state in context (Phase 2's `useContext`); the children consume it without prop-drilling. The user of the component composes the pieces, so the API is flexible without a prop for every layout.
+
+Why interviewers ask: it tests whether you reach for composition over configuration — the React way to make a component both powerful and simple to use.
+
+Closing line for the interview: "Profile before memoizing, split by route before splitting components, and prefer composition — compound components — over a prop for every case."
+
+---
+
+*Next: Phase 4 — State management (lifting state vs context vs a store, the Redux/Zustand mental model) and testing React components.*
+

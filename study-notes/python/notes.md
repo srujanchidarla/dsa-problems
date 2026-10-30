@@ -169,4 +169,122 @@ Interview one-liner: "Decorators wrap *behavior around functions*; generators wr
 
 ---
 
-*Next: OOP — classes, dunder methods, dataclasses; then concurrency basics (threads vs processes, the GIL).*
+## Phase 3 — OOP, Then Concurrency & the GIL
+
+### 1. Classes: the 30-second model
+
+A class is a blueprint; an object is a house built from it. `self` is just the object itself, passed in as the first argument — Python does it for you on `obj.method()`.
+
+```python
+class BankAccount:
+    def __init__(self, owner, balance=0):   # constructor: set up state
+        self.owner = owner
+        self.balance = balance
+
+    def deposit(self, amount):
+        self.balance += amount
+        return self.balance
+```
+
+### 2. Inheritance vs composition (the question behind the question)
+
+- **Inheritance** ("is-a"): a `SavingsAccount` *is a* `BankAccount`. Use it when the subclass truly behaves like the parent everywhere (Liskov, from the system-design notes).
+- **Composition** ("has-a"): a `Car` *has an* `Engine`. Use it when you just need the capability — it's almost always the safer default, because it doesn't lock you into a hierarchy.
+
+```python
+class Engine: ...
+class Car:
+    def __init__(self):
+        self.engine = Engine()   # has-a: swap the engine, keep the car
+```
+
+Interview line: "Prefer composition; inherit only when the subclass must be usable wherever the parent is."
+
+### 3. Dunder methods — the ones interviewers actually ask about
+
+Dunder (double-underscore) methods let your objects speak Python's built-in language:
+
+| Method | Called by | Use it for |
+|---|---|---|
+| `__init__` | `Account(...)` | Setting up state |
+| `__str__` / `__repr__` | `print(x)` / debugger | Human vs unambiguous display — `__repr__` should ideally rebuild the object |
+| `__eq__` / `__hash__` | `==`, sets, dict keys | Value equality — **if you define `__eq__`, define `__hash__` too, or set it to `None`** |
+| `__len__` | `len(x)` | Container-like objects |
+| `__iter__` / `__next__` | `for x in obj` | The iterator protocol (Phase 2, §4) — custom collections |
+| `__call__` | `obj()` | Callable objects — this is how decorators-as-classes work |
+
+```python
+from dataclasses import dataclass
+
+@dataclass
+class Point:
+    x: int
+    y: int
+
+p = Point(1, 2)
+print(p)          # Point(x=1, y=2) — __repr__ free
+```
+
+### 4. Dataclasses (and when not to use them)
+
+`@dataclass` writes `__init__`, `__repr__`, and `__eq__` for you — perfect for data carriers (a `Point`, a `Transaction`, a parsed row). Add `frozen=True` for immutability, `field(default_factory=list)` for mutable defaults (the Phase 1 mutable-default gotcha, solved properly).
+
+Don't use one when the class has real behavior, invariants to enforce in a hand-written `__init__`, or a complex lifecycle — then a plain class is clearer. And `__slots__` (listing allowed attributes) saves memory for millions of small objects, at the cost of no dynamic attributes — name it, don't reach for it unprompted.
+
+### 5. @property — validation without breaking callers
+
+```python
+class Circle:
+    def __init__(self, radius):
+        self._radius = radius
+
+    @property
+    def radius(self):
+        return self._radius
+
+    @radius.setter
+    def radius(self, value):
+        if value < 0:
+            raise ValueError("radius can't be negative")
+        self._radius = value
+```
+
+Callers still write `c.radius` — the attribute access *looks* the same, but now it runs code. That's the interview point: encapsulation in Python is a convention (`_private` by name), and `@property` is how you add a guard later without changing the API.
+
+### 6. Concurrency: threads vs processes vs async
+
+| | Threads | Processes | Async (`asyncio`) |
+|---|---|---|---|
+| Memory | Shared | Separate (copy-on-write) | Shared, single thread |
+| Best for | I/O-bound (network, disk) | CPU-bound | Many I/O-bound tasks, one thread |
+| Cost | Cheap to start | Expensive, more memory | Cheapest per task |
+| Gotcha | The GIL (below) | Data must be pickled to share | One blocking call stalls everything |
+
+### 7. The GIL — the answer interviewers want
+
+The **Global Interpreter Lock** means only one thread executes Python bytecode at a time, per process. Consequences:
+
+- **CPU-bound code does not speed up with threads** — ten threads crunching numbers take turns on one core. Use `multiprocessing` (or `concurrent.futures.ProcessPoolExecutor`) to actually use multiple cores.
+- **I/O-bound code *does* benefit** — while one thread waits on a network response, the GIL is released and another thread runs. Web servers, scrapers, API fan-out: threads are fine.
+- **The escape hatches**: NumPy/C extensions release the GIL during heavy computation; `asyncio` sidesteps it by never blocking in the first place.
+
+```python
+from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
+
+# I/O-bound: download 100 URLs — threads win
+with ThreadPoolExecutor(max_workers=10) as ex:
+    ex.map(fetch_url, urls)
+
+# CPU-bound: crunch 100 images — processes win
+with ProcessPoolExecutor() as ex:
+    ex.map(process_image, images)
+```
+
+Interview one-liner: "Threads for waiting, processes for working, async for waiting *a lot* — and the GIL is why."
+
+Closing line for the interview: "Composition over inheritance, dunders to make objects Pythonic, dataclasses for data — and when it comes to speed, ask first whether the work is waiting or working."
+
+---
+
+*Next: Phase 4 — Python interview patterns (two pointers, sliding window, heapq idioms) and async/await in depth.*
+
