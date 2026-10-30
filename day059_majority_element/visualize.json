@@ -1,0 +1,166 @@
+{
+  "problem": "Majority Element",
+  "type": "array",
+  "steps": [
+    {
+      "values": [
+        2,
+        2,
+        1,
+        1,
+        1,
+        2,
+        2
+      ],
+      "markers": [
+        {
+          "index": 0,
+          "label": "i"
+        }
+      ],
+      "note": "Start: no candidate, count = 0.",
+      "aux": {
+        "label": "vote",
+        "kind": "map",
+        "entries": [
+          [
+            "candidate",
+            "-"
+          ],
+          [
+            "count",
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "values": [
+        2,
+        2,
+        1,
+        1,
+        1,
+        2,
+        2
+      ],
+      "markers": [
+        {
+          "index": 1,
+          "label": "i"
+        }
+      ],
+      "note": "i=1: 2 matches candidate 2, count = 2.",
+      "aux": {
+        "label": "vote",
+        "kind": "map",
+        "entries": [
+          [
+            "candidate",
+            2
+          ],
+          [
+            "count",
+            2
+          ]
+        ]
+      }
+    },
+    {
+      "values": [
+        2,
+        2,
+        1,
+        1,
+        1,
+        2,
+        2
+      ],
+      "markers": [
+        {
+          "index": 3,
+          "label": "i"
+        }
+      ],
+      "note": "1s cancel 2s: count drops to 0 \u2014 the old candidate is gone.",
+      "aux": {
+        "label": "vote",
+        "kind": "map",
+        "entries": [
+          [
+            "candidate",
+            2
+          ],
+          [
+            "count",
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "values": [
+        2,
+        2,
+        1,
+        1,
+        1,
+        2,
+        2
+      ],
+      "markers": [
+        {
+          "index": 4,
+          "label": "i"
+        }
+      ],
+      "note": "count was 0, so 1 becomes the new candidate.",
+      "aux": {
+        "label": "vote",
+        "kind": "map",
+        "entries": [
+          [
+            "candidate",
+            1
+          ],
+          [
+            "count",
+            1
+          ]
+        ]
+      }
+    },
+    {
+      "values": [
+        2,
+        2,
+        1,
+        1,
+        1,
+        2,
+        2
+      ],
+      "markers": [
+        {
+          "index": 6,
+          "label": "i"
+        }
+      ],
+      "note": "The 2s at the end win the tug-of-war. Survivor: 2.",
+      "aux": {
+        "label": "vote",
+        "kind": "map",
+        "entries": [
+          [
+            "candidate",
+            2
+          ],
+          [
+            "count",
+            1
+          ]
+        ]
+      }
+    }
+  ]
+}

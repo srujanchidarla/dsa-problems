@@ -1,0 +1,48 @@
+{
+  "problem": "Plus One",
+  "type": "array",
+  "steps": [
+    {
+      "values": [
+        1,
+        2,
+        9
+      ],
+      "markers": [
+        {
+          "index": 2,
+          "label": "i"
+        }
+      ],
+      "note": "digits = [1,2,9]. Start at the rightmost digit: 9 + 1 = 10, so write 0 and carry 1 left."
+    },
+    {
+      "values": [
+        1,
+        2,
+        0
+      ],
+      "markers": [
+        {
+          "index": 1,
+          "label": "i"
+        }
+      ],
+      "note": "i=1: 2 + carry 1 = 3, which is under 9 \u2014 the carry stops here."
+    },
+    {
+      "values": [
+        1,
+        3,
+        0
+      ],
+      "markers": [
+        {
+          "index": 1,
+          "label": "i"
+        }
+      ],
+      "note": "Final: [1,3,0]. If every digit had been 9, the answer would grow by one digit: [1,0,0]."
+    }
+  ]
+}

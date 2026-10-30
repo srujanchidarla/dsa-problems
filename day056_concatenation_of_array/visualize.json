@@ -1,0 +1,71 @@
+{
+  "problem": "Concatenation of Array",
+  "type": "array",
+  "steps": [
+    {
+      "values": [
+        1,
+        2,
+        1
+      ],
+      "markers": [
+        {
+          "index": 0,
+          "label": "i"
+        }
+      ],
+      "note": "nums = [1,2,1], n = 3. Answer will have 6 slots: two copies back to back."
+    },
+    {
+      "values": [
+        1,
+        2,
+        1,
+        0,
+        0,
+        0
+      ],
+      "markers": [
+        {
+          "index": 0,
+          "label": "i"
+        }
+      ],
+      "note": "i=0: ans[0] = 1, and ans[3] = 1 \u2014 same value, both halves."
+    },
+    {
+      "values": [
+        1,
+        2,
+        1,
+        1,
+        0,
+        0
+      ],
+      "markers": [
+        {
+          "index": 1,
+          "label": "i"
+        }
+      ],
+      "note": "i=1: ans[1] = 2, and ans[4] = 2."
+    },
+    {
+      "values": [
+        1,
+        2,
+        1,
+        1,
+        2,
+        1
+      ],
+      "markers": [
+        {
+          "index": 2,
+          "label": "i"
+        }
+      ],
+      "note": "i=2: ans[2] = 1, and ans[5] = 1. Final: [1,2,1,1,2,1]"
+    }
+  ]
+}

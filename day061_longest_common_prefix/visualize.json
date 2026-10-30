@@ -1,0 +1,48 @@
+{
+  "problem": "Longest Common Prefix",
+  "type": "array",
+  "steps": [
+    {
+      "values": [
+        "flower",
+        "flow",
+        "flight"
+      ],
+      "markers": [
+        {
+          "index": 0,
+          "label": "col 0"
+        }
+      ],
+      "note": "Column 0: f, f, f \u2014 all match, prefix so far: 'f'."
+    },
+    {
+      "values": [
+        "flower",
+        "flow",
+        "flight"
+      ],
+      "markers": [
+        {
+          "index": 1,
+          "label": "col 1"
+        }
+      ],
+      "note": "Column 1: l, l, l \u2014 all match, prefix so far: 'fl'."
+    },
+    {
+      "values": [
+        "flower",
+        "flow",
+        "flight"
+      ],
+      "markers": [
+        {
+          "index": 2,
+          "label": "col 2"
+        }
+      ],
+      "note": "Column 2: o, o, i \u2014 'flight' breaks it. Stop here. Final answer: 'fl'."
+    }
+  ]
+}
