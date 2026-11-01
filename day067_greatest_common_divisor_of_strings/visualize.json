@@ -1,0 +1,73 @@
+{
+  "problem": "Greatest Common Divisor of Strings",
+  "type": "array",
+  "steps": [
+    {
+      "values": [
+        "A",
+        "B",
+        "C",
+        "A",
+        "B",
+        "C"
+      ],
+      "markers": [
+        {
+          "index": 0,
+          "label": "unit"
+        },
+        {
+          "index": 1,
+          "label": "unit"
+        },
+        {
+          "index": 2,
+          "label": "unit"
+        }
+      ],
+      "note": "str1 = ABCABC. The first block is 'ABC' — is the whole string just 'ABC' repeated?"
+    },
+    {
+      "values": [
+        "A",
+        "B",
+        "C",
+        "A",
+        "B",
+        "C"
+      ],
+      "markers": [
+        {
+          "index": 3,
+          "label": "repeat"
+        },
+        {
+          "index": 4,
+          "label": "repeat"
+        },
+        {
+          "index": 5,
+          "label": "repeat"
+        }
+      ],
+      "note": "Second block is 'ABC' again, and str2 is exactly 'ABC'. So 'ABC' divides both."
+    },
+    {
+      "values": [
+        "A",
+        "B",
+        "C",
+        "A",
+        "B",
+        "C"
+      ],
+      "markers": [
+        {
+          "index": 2,
+          "label": "answer"
+        }
+      ],
+      "note": "gcd(6, 3) = 3, so the longest dividing string has length 3: 'ABC'. Final answer: 'ABC'."
+    }
+  ]
+}

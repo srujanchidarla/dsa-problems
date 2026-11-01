@@ -1,0 +1,69 @@
+{
+  "problem": "Max Consecutive Ones",
+  "type": "array",
+  "steps": [
+    {
+      "values": [
+        1,
+        1,
+        0,
+        1,
+        1,
+        1
+      ],
+      "markers": [
+        {
+          "index": 0,
+          "label": "run 1"
+        },
+        {
+          "index": 1,
+          "label": "run 2"
+        }
+      ],
+      "note": "Start: two 1s in a row, current run = 2, best = 2."
+    },
+    {
+      "values": [
+        1,
+        1,
+        0,
+        1,
+        1,
+        1
+      ],
+      "markers": [
+        {
+          "index": 2,
+          "label": "0 resets"
+        }
+      ],
+      "note": "A 0 at index 2 resets the current run to 0. Best is still 2."
+    },
+    {
+      "values": [
+        1,
+        1,
+        0,
+        1,
+        1,
+        1
+      ],
+      "markers": [
+        {
+          "index": 3,
+          "label": "run 1"
+        },
+        {
+          "index": 4,
+          "label": "run 2"
+        },
+        {
+          "index": 5,
+          "label": "run 3"
+        }
+      ],
+      "note": "Three 1s in a row at the end: run grows 1, 2, 3 and best becomes 3. Final answer: 3."
+    }
+  ]
+}

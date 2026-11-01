@@ -1,0 +1,54 @@
+{
+  "problem": "Median of Two Sorted Arrays",
+  "type": "array",
+  "steps": [
+    {
+      "values": [
+        1,
+        2,
+        3
+      ],
+      "markers": [
+        {
+          "index": 1,
+          "label": "median"
+        }
+      ],
+      "note": "Merged [1,3] and [2] -> [1,2,3]. Odd length, the middle value 2 is the median."
+    },
+    {
+      "values": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "markers": [
+        {
+          "index": 1,
+          "label": "left"
+        },
+        {
+          "index": 2,
+          "label": "right"
+        }
+      ],
+      "note": "Merged [1,2] and [3,4] -> [1,2,3,4]. Even length, average the two middle values: (2 + 3) / 2 = 2.5."
+    },
+    {
+      "values": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "markers": [
+        {
+          "index": 1,
+          "label": "cut"
+        }
+      ],
+      "note": "The optimized way never merges: binary search finds the cut where left halves hold exactly half the elements, then reads the border values. Final answer for this case: 2.5."
+    }
+  ]
+}
