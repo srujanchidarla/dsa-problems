@@ -1,0 +1,57 @@
+{
+  "problem": "Is Subsequence",
+  "type": "array",
+  "steps": [
+    {
+      "values": [
+        "a",
+        "h",
+        "b",
+        "g",
+        "d",
+        "c"
+      ],
+      "markers": [
+        {
+          "index": 0,
+          "label": "a matches"
+        }
+      ],
+      "note": "s = 'abc', t = 'ahbgdc'. First 'a' in t matches the 'a' in s — advance both pointers."
+    },
+    {
+      "values": [
+        "a",
+        "h",
+        "b",
+        "g",
+        "d",
+        "c"
+      ],
+      "markers": [
+        {
+          "index": 2,
+          "label": "b matches"
+        }
+      ],
+      "note": "Skip 'h' in t (no match), then 'b' matches the 'b' in s — advance both."
+    },
+    {
+      "values": [
+        "a",
+        "h",
+        "b",
+        "g",
+        "d",
+        "c"
+      ],
+      "markers": [
+        {
+          "index": 5,
+          "label": "c matches"
+        }
+      ],
+      "note": "Skip 'g' and 'd', then 'c' matches. The s pointer reached the end — 'abc' is a subsequence. Final answer: true."
+    }
+  ]
+}

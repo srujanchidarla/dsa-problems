@@ -1,0 +1,83 @@
+{
+  "problem": "Find All Numbers Disappeared in an Array",
+  "type": "array",
+  "steps": [
+    {
+      "values": [
+        4,
+        3,
+        2,
+        7,
+        8,
+        2,
+        3,
+        1
+      ],
+      "markers": [
+        {
+          "index": 3,
+          "label": "4 seen"
+        },
+        {
+          "index": 2,
+          "label": "3 seen"
+        },
+        {
+          "index": 1,
+          "label": "2 seen"
+        }
+      ],
+      "note": "Read 4, 3, 2: flip the sign at index 3, 2, 1. Negative means 'that number showed up'."
+    },
+    {
+      "values": [
+        4,
+        3,
+        2,
+        7,
+        8,
+        2,
+        3,
+        1
+      ],
+      "markers": [
+        {
+          "index": 6,
+          "label": "7 seen"
+        },
+        {
+          "index": 7,
+          "label": "8 seen"
+        },
+        {
+          "index": 0,
+          "label": "1 seen"
+        }
+      ],
+      "note": "Continue with 7, 8, 2, 3, 1: flip signs at index 6, 7, 1, 2, 0. Values 2 and 3 repeat — their spots are already negative, so nothing changes."
+    },
+    {
+      "values": [
+        4,
+        3,
+        2,
+        7,
+        8,
+        2,
+        3,
+        1
+      ],
+      "markers": [
+        {
+          "index": 4,
+          "label": "still +: 5 missing"
+        },
+        {
+          "index": 5,
+          "label": "still +: 6 missing"
+        }
+      ],
+      "note": "Indices 4 and 5 are still positive — nobody ever flipped them. Final answer: [5, 6]."
+    }
+  ]
+}
