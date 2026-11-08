@@ -1,0 +1,47 @@
+{
+  "problem": "Remove Elements by Type and Color",
+  "type": "array",
+  "steps": [
+    {
+      "values": [
+        0,
+        1,
+        1,
+        0
+      ],
+      "markers": [
+        {
+          "index": 1,
+          "label": "type 1 \u00b7 color 3"
+        },
+        {
+          "index": 2,
+          "label": "type 1 \u00b7 color 3"
+        }
+      ],
+      "note": "types = [0,1,1,0], colors = [5,3,3,5], groupSize = [2,2]. The middle two share type 1 and color 3 \u2014 a run of 2, and groupSize[1] = 2, so they can be removed."
+    },
+    {
+      "values": [
+        0,
+        0
+      ],
+      "markers": [
+        {
+          "index": 0,
+          "label": "type 0 \u00b7 color 5"
+        },
+        {
+          "index": 1,
+          "label": "type 0 \u00b7 color 5"
+        }
+      ],
+      "note": "Removing them glues the two 0s together into a run of 2, and groupSize[0] = 2, so that run can go too."
+    },
+    {
+      "values": [],
+      "markers": [],
+      "note": "Nothing left \u2014 the answer is true."
+    }
+  ]
+}

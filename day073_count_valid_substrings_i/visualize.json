@@ -1,0 +1,61 @@
+{
+  "problem": "Count Valid Substrings I",
+  "type": "array",
+  "steps": [
+    {
+      "values": [
+        "a",
+        "b",
+        "a",
+        "c"
+      ],
+      "markers": [
+        {
+          "index": 0,
+          "label": "left"
+        },
+        {
+          "index": 3,
+          "label": "right"
+        }
+      ],
+      "note": "s = \"abac\": no \"abc\" appears anywhere, so all 4*5/2 = 10 substrings are valid."
+    },
+    {
+      "values": [
+        "a",
+        "b",
+        "c"
+      ],
+      "markers": [
+        {
+          "index": 2,
+          "label": "'abc' ends here"
+        }
+      ],
+      "note": "s = \"abc\": at index 2 the substring \"abc\" ends, so substrings ending here must start at 1 or later \u2014 start 0 is blocked."
+    },
+    {
+      "values": [
+        "a",
+        "b",
+        "c"
+      ],
+      "markers": [
+        {
+          "index": 0,
+          "label": "+1"
+        },
+        {
+          "index": 1,
+          "label": "+2"
+        },
+        {
+          "index": 2,
+          "label": "+2"
+        }
+      ],
+      "note": "Count the valid substrings ending at each index: 1 + 2 + 2 = 5."
+    }
+  ]
+}
